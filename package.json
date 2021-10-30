@@ -1,0 +1,40 @@
+{
+  "name": "table-render",
+  "version": "1.0.0",
+  "description": "a web-based table with canvas",
+  "main": "src/index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/register": "^7.8.6",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "html-webpack-plugin": "^3.2.0",
+    "mocha": "^7.1.0",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
+  },
+  "scripts": {
+    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config build/webpack.dev.js",
+    "build": "./node_modules/webpack/bin/webpack.js --config build/webpack.prod.js",
+    "lint": "./node_modules/eslint/bin/eslint.js src",
+    "test": "./node_modules/mocha/bin/mocha --require @babel/register test/*"
+  },
+  "keywords": [
+    "javascript",
+    "table",
+    "canvas",
+    "html5"
+  ],
+  "author": "myliang",
+  "license": "MIT"
+}

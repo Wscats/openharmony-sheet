@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>获取图片像素矩阵</title>
+</head>
+
+<body>
+    <canvas id="canvas_id"></canvas>
+    <div id="box"></div>
+    <script>
+        // 10进制转16进制，统一返回两位
+        function fixNum(num) {
+            var c = num.toString(16)
+            if (c.length === 1) {
+                c = '0' + c
+            }
+            return c
+        }
+        // 获取canvas
+        var canvas = document.getElementById('canvas_id')
+        var ctx = canvas.getContext('2d')
+        // 创建图片对象
+        var img = new Image()
+        // 图片地址自己更换一下
+        img.src = "https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/690056938c48415b9dae820ae065016b~tplv-k3u1fbpfcp-watermark.awebp"
+        img.crossOrigin = "Anonymous"
+        // 图片的比例数值
+        var scale = 0.5
+        // 图片加载完毕回调函数
+        img.onload = function () {
+            // 图片宽高
+            var w = Math.floor(img.width * scale),
+                h = Math.floor(img.height * scale)
+            // 画布宽高
+            canvas.width = w
+            canvas.height = h
+            // 绘制图片到canvas
+            ctx.drawImage(img, 0, 0, w, h)
+            // 获取图片数据
+            var imgData = ctx.getImageData(0, 0, w, h);
+            // 存储颜色列表
+            var list = []
+            for (var i = 0; i < imgData.data.length; i += 4) {
+                // 将像素数值转换成颜色，添加进列表
+                list.push(
+                    `#${fixNum(imgData.data[i])}${fixNum(imgData.data[i + 1])}${fixNum(imgData.data[i + 2])}${fixNum(imgData.data[i + 3])}`
+                )
+            }
+            // 准备一个位置展示一下像素矩阵
+            var box = document.getElementById("box")
+            // 矩阵数组
+            var data = new Array()
+            for (var i = 0; i < w; i++) {
+                // 创建行数组
+                data[i] = new Array()
+                var row = document.createElement("div")
+                row.style.display = 'flex'
+                for (var j = 0; j < h; j++) {
+                    // 创建每一个像素块
+                    data[i][j] = { text: list[i * w + j], style: { color: list[i * w + j] } }
+                    var cell = document.createElement("div")
+                    cell.style.background = data[i][j]
+                    cell.style.width = '10px'
+                    cell.style.height = '10px'
+                    cell.setAttribute("id", `${i}_${j}`)
+                    row.append(cell)
+                }
+                box.append(row)
+            }
+            console.log(data);
+            // 把像素数组放到文本框
+            var e = document.createElement('textarea')
+            e.value = JSON.stringify(list)
+            box.append(e)
+        }
+    </script>
+</body>
+
+</html>

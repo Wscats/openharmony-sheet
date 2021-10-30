@@ -1,1 +1,0 @@
-require('./ExampleJsunit.test.js')
