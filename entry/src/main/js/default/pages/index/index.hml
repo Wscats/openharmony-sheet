@@ -1,0 +1,4 @@
+<element name="Sheet" src="../../components/index.hml"></element>
+
+<Sheet sheet="{{sheet}}" @sheet-show="sheetShow" @click-cell-start="clickCellStart" @click-cell-end="clickCellEnd"
+        @click-cell-longpress="clickCellLongpress" @change="change"></Sheet>

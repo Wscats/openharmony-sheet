@@ -1,0 +1,9 @@
+<div class="container">
+        <canvas ref="canvas" style="width: {{canvasWidth}}; height: {{cavasHeight}};" ontouchstart="touchstart"
+                onlongpress="longpress" ontouchend="touchend" ontouchend="moveUp"></canvas>
+        <div if="{{isShowArea}}" style="width: 100px; height: 25px; top: {{areaTop}}px; left: {{areaLeft}}px"
+                class="area" id="area" ref="area">
+                <textarea if="{{isShowArea}}" focus="{{isFocus}}" value="{{content}}" ref="textarea"
+                        selectchange="change" onchange="change"></textarea>
+        </div>
+</div>
