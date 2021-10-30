@@ -48,7 +48,7 @@ npm install
 
 - 使用基础组件和容器组件等实现通用组件 - [OpenHarmonyGallery](https://gitee.com/wscats/OpenHarmonyGallery)
 - 使用画布组件实现 `Canvas` 游戏 - [OpenHarmonyFlappyBird](https://gitee.com/wscats/OpenHarmonyFlappyBird)
-- 使用基础组件，容器组件和画布组件实现 `Canvas` 渲染引擎 - [OpenHarmonySheet](https://gitee.com/rekyone/sheet)
+- 使用基础组件，容器组件和画布组件实现 `Canvas` 渲染引擎 - [OpenHarmonySheet](https://github.com/Wscats/sheet)
 
 渲染引擎是我们最终目标，虽然难度偏大，但我们团队成员决定分开三步来实现该目标，首先至少先学会使用基础组件和容器组件，然后再学会使用画布组件，最后综合这些经验实现一个渲染引擎。
 
@@ -129,9 +129,9 @@ closeGallery(e) {
 整体实现的效果如下图所示，效果简单粗暴，写完了这个 `DEMO` 之后，我们团队成员对 `OpenHarmony` 的基础组件运用有了最基本的了解：
 
 <div>
-<img align="left" width="200" width="200" src="https://gitee.com/wscats/OpenHarmonyGallery/raw/master/screenshot/1.gif" />
-<img align="left" width="200" src="https://gitee.com/wscats/OpenHarmonyGallery/raw/master/screenshot/2.gif" />
-<img width="200" src="https://gitee.com/wscats/OpenHarmonyGallery/raw/master/screenshot/3.gif" />
+<img align="left" width="200" width="200" src="./screenshots/15.gif" />
+<img align="left" width="200" src="./screenshots/16.gif" />
+<img width="200" src="./screenshots/17.gif" />
 </div>
 
 <br/>
@@ -141,7 +141,7 @@ closeGallery(e) {
 
 虽然上面我们掌握了最基础的组件使用，但我们还是没使用到 `Canvas` 画布组件，所以我们继续翻阅官方文档，发现 `OpenHarmony` 是提供了齐全的画布接口：
 
-<img height="170" src="https://gitee.com/wscats/OpenHarmonyFlappyBird/raw/main/screenshots/3.gif" />
+<img height="170" src="./screenshots/18.gif" />
 
 我们使用经典 `FlappyBird` 游戏作为我们画布组件的第一次尝试。
 
@@ -581,7 +581,7 @@ table
 }
 ```
 
-我们将上面常见的接口做了一些演示，运行 [OpenHarmonySheet](https://gitee.com/rekyone/sheet)，`长按`任一单元格弹出`对话框`并点击对应选项即可查看常用接口的运行结果，此演示仅供参考，更多实际使用场景请参考文档实现:
+我们将上面常见的接口做了一些演示，运行 [OpenHarmonySheet](https://github.com/Wscats/sheet)，`长按`任一单元格弹出`对话框`并点击对应选项即可查看常用接口的运行结果，此演示仅供参考，更多实际使用场景请参考文档实现:
 
 <img width="180" align="left" src="https://gitee.com/rekyone/sheet/raw/main/screenshots/7.gif" />
 <img width="180" align="left" src="https://gitee.com/rekyone/sheet/raw/main/screenshots/3.png" />
@@ -624,7 +624,7 @@ this.$emit("eventName", data);
 ```
 
 我们把上面这些通通打包，并完善了介绍文档和接入文档上传到 `Gitee` - [OpenHarmonySheet
-](https://gitee.com/rekyone/sheet) 仓库中，就完成了我们的表格引擎组件。
+](https://github.com/Wscats/sheet) 仓库中，就完成了我们的表格引擎组件。
 
 <img src="https://gitee.com/rekyone/sheet/raw/main/screenshots/14.png" />
 
