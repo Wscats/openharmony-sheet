@@ -28,7 +28,10 @@
     "build": "./node_modules/webpack/bin/webpack.js --config build/webpack.prod.js",
     "lint": "./node_modules/eslint/bin/eslint.js src",
     "test": "./node_modules/mocha/bin/mocha --require @babel/register test/*",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "keywords": [
     "javascript",
@@ -40,5 +43,13 @@
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wscats/openharmony-sheet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wscats/openharmony-sheet/issues"
+  },
+  "homepage": "https://github.com/wscats/openharmony-sheet#readme"
 }

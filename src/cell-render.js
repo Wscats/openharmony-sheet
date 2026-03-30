@@ -1,3 +1,5 @@
+'use strict';
+
 // align: left | center | right
 // width: the width of cell
 // padding: the padding of cell
