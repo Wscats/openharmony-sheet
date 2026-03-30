@@ -27,7 +27,8 @@
     "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config build/webpack.dev.js",
     "build": "./node_modules/webpack/bin/webpack.js --config build/webpack.prod.js",
     "lint": "./node_modules/eslint/bin/eslint.js src",
-    "test": "./node_modules/mocha/bin/mocha --require @babel/register test/*"
+    "test": "./node_modules/mocha/bin/mocha --require @babel/register test/*",
+    "type-check": "tsc --noEmit"
   },
   "keywords": [
     "javascript",
@@ -36,5 +37,8 @@
     "html5"
   ],
   "author": "myliang",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }
