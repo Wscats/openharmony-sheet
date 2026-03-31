@@ -1,75 +1,51 @@
-'use strict';
+import type Canvas2d from './canvas2d';
+import type { CellStyle, CellBorder } from './types';
 
-// align: left | center | right
-// width: the width of cell
-// padding: the padding of cell
-function textx(align, width, padding) {
+/** Calculate text x-position based on alignment. */
+function textx(align: string, width: number, padding: number): number {
   switch (align) {
-    case 'left':
-      return padding;
-    case 'center':
-      return width / 2;
-    case 'right':
-      return width - padding;
-    default:
-      return 0;
+    case 'left': return padding;
+    case 'center': return width / 2;
+    case 'right': return width - padding;
+    default: return 0;
   }
 }
 
-// align: top | middle | bottom
-// height: the height of cell
-// txtHeight: the height of text
-// padding: the padding of cell
-function texty(align, height, txtHeight, padding) {
+/** Calculate text y-position based on vertical alignment. */
+function texty(align: string, height: number, txtHeight: number, padding: number): number {
   switch (align) {
-    case 'top':
-      return padding;
-    case 'middle':
-      return height / 2 - txtHeight / 2;
-    case 'bottom':
-      return height - padding - txtHeight;
-    default:
-      return 0;
+    case 'top': return padding;
+    case 'middle': return height / 2 - txtHeight / 2;
+    case 'bottom': return height - padding - txtHeight;
+    default: return 0;
   }
 }
 
-// type: underline | strike
-// align: left | center | right
-// valign: top | middle | bottom
-function textLine(type, align, valign, x, y, w, h) {
-  // y
+/** Calculate underline/strikethrough line coordinates. */
+function textLine(
+  type: string, align: string, valign: string,
+  x: number, y: number, w: number, h: number,
+): [[number, number], [number, number]] {
   let ty = 0;
   if (type === 'underline') {
-    if (valign === 'top') {
-      ty = -h;
-    } else if (valign === 'middle') {
-      ty = -h / 2;
-    }
+    if (valign === 'top') ty = -h;
+    else if (valign === 'middle') ty = -h / 2;
   } else if (type === 'strike') {
-    if (valign === 'top') {
-      ty = -h / 2;
-    } else if (valign === 'bottom') {
-      ty = h / 2;
-    }
+    if (valign === 'top') ty = -h / 2;
+    else if (valign === 'bottom') ty = h / 2;
   }
-  // x
+
   let tx = 0;
-  if (align === 'center') {
-    tx = w / 2;
-  } else if (align === 'right') {
-    tx = w;
-  }
-  return [
-    [x - tx, y - ty],
-    [x - tx + w, y - ty],
-  ];
+  if (align === 'center') tx = w / 2;
+  else if (align === 'right') tx = w;
+
+  return [[x - tx, y - ty], [x - tx + w, y - ty]];
 }
 
-function renderBorder(draw, width, height, border) {
+/** Render cell borders. */
+function renderBorder(draw: Canvas2d, width: number, height: number, border?: CellBorder): void {
   if (border) {
-    const {
-      top, right, bottom, left,
-    } = border;
+    const { top, right, bottom, left } = border;
     draw.save();
     if (top) draw.lineStyle(...top).line([0, 0], [width, 0]);
     if (right) draw.lineStyle(...right).line([width, 0], [width, height]);
@@ -79,7 +55,8 @@ function renderBorder(draw, width, height, border) {
   }
 }
 
-function fontString(family, size, italic, bold) {
+/** Build a CSS font string. */
+function fontString(family?: string, size?: number, italic?: boolean, bold?: boolean): string | undefined {
   if (family && size) {
     let font = '';
     if (italic) font += 'italic ';
@@ -89,28 +66,38 @@ function fontString(family, size, italic, bold) {
   return undefined;
 }
 
-// draw: Canvas2d
-// style:
-export function cellRender(draw, text, rect, {
-  border, fontSize, fontName,
-  bold, italic, color, bgcolor,
-  align, valign, underline, strike,
-  rotate, textwrap, padding,
-} = {}) {
-  // at first move to (left, top)
-  draw.save().beginPath()
-    .translate(rect.x, rect.y);
+/** Cell rectangle for rendering. */
+interface RenderRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
-  // border
+/**
+ * Render a single cell with text, background, border, and decorations.
+ */
+export function cellRender(
+  draw: Canvas2d,
+  text: string,
+  rect: RenderRect,
+  style: CellStyle = {},
+): void {
+  const {
+    border, fontSize = 9, fontName, bold, italic,
+    color, bgcolor, align = 'left', valign = 'middle',
+    underline, strike, rotate, textwrap, padding,
+  } = style;
+
+  draw.save().beginPath().translate(rect.x, rect.y);
+
   renderBorder(draw, rect.width, rect.height, border);
 
-  // clip
   draw.attr({ fillStyle: bgcolor })
     .rect(0.5, 0.5, rect.width - 1, rect.height - 1)
     .clip()
     .fill();
 
-  // text style
   draw.save().beginPath().attr({
     textAlign: align,
     textBaseline: valign,
@@ -118,7 +105,6 @@ export function cellRender(draw, text, rect, {
     fillStyle: color,
   });
 
-  // rotate
   if (rotate && rotate > 0) {
     draw.rotate(rotate * (Math.PI / 180));
   }
@@ -127,7 +113,8 @@ export function cellRender(draw, text, rect, {
   const tx = textx(align, rect.width, xp);
   const txts = text.split('\n');
   const innerWidth = rect.width - (xp * 2);
-  const ntxts = [];
+  const ntxts: string[] = [];
+
   txts.forEach((it) => {
     const txtWidth = draw.textWidth(it);
     if (textwrap && txtWidth > innerWidth) {
@@ -150,9 +137,10 @@ export function cellRender(draw, text, rect, {
 
   const lineHeight = fontSize * 1.425;
   const txtHeight = (ntxts.length - 1) * lineHeight;
-  const lineTypes = [];
+  const lineTypes: string[] = [];
   if (underline) lineTypes.push('underline');
   if (strike) lineTypes.push('strike');
+
   let ty = texty(valign, rect.height, txtHeight, yp);
   ntxts.forEach((it) => {
     const txtWidth = draw.textWidth(it);
@@ -162,8 +150,8 @@ export function cellRender(draw, text, rect, {
     });
     ty += lineHeight;
   });
-  draw.restore();
 
+  draw.restore();
   draw.restore();
 }
 

@@ -14,7 +14,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "allowJs": true,
+    "allowJs": false,
     "checkJs": false,
     "outDir": "./dist",
     "rootDir": "./src",

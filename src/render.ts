@@ -1,6 +1,10 @@
 import { cellRender } from './cell-render';
 import { eachRanges } from './range';
-import { newArea } from './area';
+import { newArea, eachRange } from './area';
+import type Canvas2d from './canvas2d';
+import type Area from './area';
+import type Range from './range';
+import type { CellStyle, CellValue, LineStyle, SelectionStyle } from './types';
 
 /**
  * render the grid lines
@@ -8,7 +12,7 @@ import { newArea } from './area';
  * @param {Area} area
  * @param {width, color} param2 the line style
  */
-function renderLines(draw, area, { width, color }) {
+function renderLines(draw: Canvas2d, area: Area, { width, color }: LineStyle): void {
   // render row-col-lines
   if (width > 0) {
     // const [rs, cs, re, ce, aw, ah] = area;
@@ -37,7 +41,12 @@ function renderLines(draw, area, { width, color }) {
  * @param {x, y, width, height} cellRect
  * @param {style} cellStyle the style of default-cell
  */
-function renderCell(draw, ri, ci, cell, cellRect, cellStyle) {
+function renderCell(
+  draw: Canvas2d, ri: number, ci: number,
+  cell: (ri: number, ci: number) => CellValue,
+  cellRect: { x: number; y: number; width: number; height: number },
+  cellStyle: CellStyle,
+): void {
   const c = cell(ri, ci);
   let text = '';
   let style = cellStyle;
@@ -65,7 +74,12 @@ function renderCell(draw, ri, ci, cell, cellRect, cellStyle) {
  * @param {style} selectionStyle
  * @param {Array<string>} merges
  */
-function renderCells(draw, type, area, cell, cellStyle, selection, selectionStyle, merges) {
+function renderCells(
+  draw: Canvas2d, type: string, area: Area,
+  cell: (ri: number, ci: number) => CellValue,
+  cellStyle: CellStyle, selection: Range | undefined,
+  selectionStyle: SelectionStyle, merges?: string[],
+): void {
   draw.save().rect(0, 0, area.width, area.height).clip();
   // const [rs, cs, re, ce] = area;
   area.each((ri, ci, rect) => {
@@ -102,54 +116,57 @@ function renderCells(draw, type, area, cell, cellStyle, selection, selectionStyl
   draw.restore();
 }
 
-function renderLinesAndCells(draw, type, area,
-  cell, cellStyle, lineStyle, selection, selectionStyle, merges) {
+function renderLinesAndCells(
+  draw: Canvas2d, type: string, area: Area,
+  cell: (ri: number, ci: number) => CellValue,
+  cellStyle: CellStyle, lineStyle: LineStyle,
+  selection?: Range, selectionStyle?: SelectionStyle, merges?: string[],
+): void {
   renderLines(draw, area, lineStyle);
-  renderCells(draw, type, area, cell, cellStyle,
-    selection, selectionStyle, merges);
+  renderCells(draw, type, area, cell, cellStyle, selection, selectionStyle!, merges);
 }
 
 // private methods --- start ----
 
-function renderRowHeader(draw, area) {
+function renderRowHeader(this: any, draw: Canvas2d, area: Area): void {
   const { cell, width } = this.$rowHeader;
   // render row-index
   if (width > 0) {
     draw.save().translate(0, area.y);
     const { $selection } = this;
-    let nselection = null;
+    let nselection: Range | null = null;
     if ($selection) {
       nselection = this.$selection.clone();
-      nselection.startCol = 0;
-      nselection.endCol = 0;
+      nselection!.startCol = 0;
+      nselection!.endCol = 0;
     }
     renderLinesAndCells(draw, 'row-header', area,
       cell, this.$headerCellStyle, this.$headerLineStyle,
-      nselection, this.$selectionStyle);
+      nselection!, this.$selectionStyle);
     draw.restore();
   }
 }
 
-function renderColHeader(draw, area) {
+function renderColHeader(this: any, draw: Canvas2d, area: Area): void {
   const { cell, height, merges } = this.$colHeader;
   // render col-index
   if (height > 0) {
     draw.save().translate(area.x, 0);
     const { $selection } = this;
-    let nselection = null;
+    let nselection: Range | null = null;
     if ($selection) {
       nselection = this.$selection.clone();
-      nselection.startRow = 0;
-      nselection.endRow = area.endRow;
+      nselection!.startRow = 0;
+      nselection!.endRow = area.endRow;
     }
     renderLinesAndCells(draw, 'col-header', area,
       cell, this.$headerCellStyle, this.$headerLineStyle,
-      nselection, this.$selectionStyle, merges);
+      nselection!, this.$selectionStyle, merges);
     draw.restore();
   }
 }
 
-function renderBody(draw, area) {
+function renderBody(this: any, draw: Canvas2d, area: Area): void {
   draw.save().translate(area.x, area.y);
   renderLinesAndCells(draw, 'body', area,
     this.$cell, this.$cellStyle, this.$lineStyle,
@@ -157,7 +174,7 @@ function renderBody(draw, area) {
   draw.restore();
 }
 
-function renderFreezeLines(draw, x, y) {
+function renderFreezeLines(this: any, draw: Canvas2d, x: number, y: number): void {
   const [fr, fc] = this.$freeze;
   const { width, color } = this.$freezeLineStyle;
   // console.log('width:', width, color, fr, fc);
@@ -169,9 +186,11 @@ function renderFreezeLines(draw, x, y) {
   }
 }
 
-export function render(draw,
-  [area1, area2, area3, area4],
-  [iarea1, iarea21, iarea23, iarea3]) {
+export function render(
+  this: any, draw: Canvas2d,
+  [area1, area2, area3, area4]: [Area, Area, Area, Area],
+  [iarea1, iarea21, iarea23, iarea3]: [Area, Area, Area, Area],
+): void {
   draw.resize(this.$width, this.$height);
 
   // render area-4
@@ -197,7 +216,7 @@ export function render(draw,
   const { x, y } = area2;
   if (x > 0 && y > 0) {
     renderLinesAndCells(draw, 'header',
-      newArea(0, 0, 0, 0, () => ({ width: x }), () => ({ height: y })),
+      newArea(0, 0, 0, 0, () => ({ width: x, hide: false }), () => ({ height: y, hide: false })),
       () => '', this.$headerCellStyle, this.$headerLineStyle);
   }
 }

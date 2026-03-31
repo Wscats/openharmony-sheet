@@ -1,4 +1,6 @@
-export const img = [
+import type { CellObject } from './types';
+
+export const img: CellObject[][] = [
     [
         {
             "text": "#00000000",
