@@ -203,8 +203,7 @@ class Table {
           value : value.text;
 
         textarea.addEventListener('input', (e) => {
-          console.log(e.target.value);
-          let input = e.target.value;
+          const input = e.target.value;
           window.table.cell((ri, ci) => {
             if (ri === row && ci === col) {
               return window.data[ri][ci] = typeof value === 'string' || typeof value === 'number' ?
@@ -213,17 +212,11 @@ class Table {
             return window.data[ri][ci];
           });
         })
-        console.log('onClick', 'type:', type, 'cellRect:', cellRect);
-        // console.log(this.cell(row, col));
         break;
     }
-    // console.log('onClick', 'type:', type, 'cellRect:', cellRect);
-    // console.log('viewport', this.viewport, this.viewport.table);
   };
 
-  $onSelected = () => {
-    console.log('onSelected', e);
-  };
+  $onSelected = () => {};
 
   constructor(container, width, height) {
     const target = document.createElement('canvas');
@@ -237,11 +230,6 @@ class Table {
   get viewport() {
     return new Viewport(this);
   }
-
-  // render() {
-  //   this.viewport.render(this.$draw);
-  //   return this;
-  // }
 
   render() {
     const viewport = new Viewport(this);

@@ -69,7 +69,6 @@ function renderCells(draw, type, area, cell, cellStyle, selection, selectionStyl
   draw.save().rect(0, 0, area.width, area.height).clip();
   // const [rs, cs, re, ce] = area;
   area.each((ri, ci, rect) => {
-    // console.log('ri:', ri, ', ci:', ci, ', rect:', rect);
     renderCell(draw, ri, ci, cell, rect, cellStyle);
   });
 
@@ -86,7 +85,6 @@ function renderCells(draw, type, area, cell, cellStyle, selection, selectionStyl
     const {
       x, y, width, height,
     } = area.rect(selection);
-    // console.log('x:', x, ', y:', y, ', width:', width, ', height: ', height)
     const { bgcolor, borderWidth, borderColor } = selectionStyle;
     const bw = type === 'body' ? borderWidth : 0;
     draw.save()
